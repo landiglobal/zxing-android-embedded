@@ -80,7 +80,8 @@ public class DecoderThread {
         thread.start();
         handler = new Handler(thread.getLooper(), callback);
         running = true;
-        requestNextPreview();
+        new Handler().postDelayed(()->  {requestNextPreview();} , 600);
+//        requestNextPreview();
     }
 
     /**

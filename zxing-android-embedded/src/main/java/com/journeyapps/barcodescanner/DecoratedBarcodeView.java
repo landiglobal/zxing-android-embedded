@@ -31,8 +31,6 @@ import java.util.Set;
 public class DecoratedBarcodeView extends FrameLayout {
     private BarcodeView barcodeView;
     private ViewfinderView viewFinder;
-    private TextView statusView;
-
     /**
      * The instance of @link TorchListener to send events callback.
      */
@@ -112,8 +110,6 @@ public class DecoratedBarcodeView extends FrameLayout {
 
         viewFinder.setCameraPreview(barcodeView);
 
-        // statusView is optional
-        statusView = findViewById(R.id.zxing_status_view);
     }
 
     /**
@@ -182,10 +178,7 @@ public class DecoratedBarcodeView extends FrameLayout {
     }
 
     public void setStatusText(String text) {
-        // statusView is optional when using a custom layout
-        if (statusView != null) {
-            statusView.setText(text);
-        }
+
     }
 
     /**
@@ -215,10 +208,6 @@ public class DecoratedBarcodeView extends FrameLayout {
 
     public ViewfinderView getViewFinder() {
         return viewFinder;
-    }
-
-    public TextView getStatusView() {
-        return statusView;
     }
 
     /**

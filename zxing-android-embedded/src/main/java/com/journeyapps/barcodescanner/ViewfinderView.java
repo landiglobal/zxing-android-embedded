@@ -21,8 +21,10 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -63,7 +65,14 @@ public class ViewfinderView extends View {
     // stopped.
     protected Rect framingRect;
     protected Size previewSize;
+    /**
+     * Width & Height of the four green corners
+     */
+    private static final int CORNER_WIDTH_DP = 6;
+    private static final int CORNER_HEIGHT_DP = 20;
 
+    private final int cornerWidth;
+    private final int cornerHeight;
     // This constructor is used when the class is built from an XML resource.
     public ViewfinderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -85,8 +94,11 @@ public class ViewfinderView extends View {
         this.resultPointColor = attributes.getColor(R.styleable.zxing_finder_zxing_possible_result_points,
                 resources.getColor(R.color.zxing_possible_result_points));
         this.laserVisibility = attributes.getBoolean(R.styleable.zxing_finder_zxing_viewfinder_laser_visibility,
-                true);
-
+                false);
+        float density = context.getResources().getDisplayMetrics().density;
+        // Convert dp to pixels
+        cornerWidth = (int) (density * CORNER_WIDTH_DP);
+        cornerHeight = (int) (density * CORNER_HEIGHT_DP);
         attributes.recycle();
 
         scannerAlpha = 0;
@@ -136,7 +148,7 @@ public class ViewfinderView extends View {
             this.previewSize = previewSize;
         }
     }
-
+    private int slideTop;
     @Override
     public void onDraw(Canvas canvas) {
         refreshSizes();
@@ -162,6 +174,38 @@ public class ViewfinderView extends View {
             paint.setAlpha(CURRENT_POINT_OPACITY);
             canvas.drawBitmap(resultBitmap, null, frame, paint);
         } else {
+
+            paint.setColor(Color.WHITE);
+            canvas.drawRect(frame.left, frame.top, frame.left + cornerHeight,
+                    frame.top + cornerWidth, paint);
+            canvas.drawRect(frame.left, frame.top, frame.left + cornerWidth,
+                    frame.top + cornerHeight, paint);
+            canvas.drawRect(frame.right - cornerHeight, frame.top, frame.right,
+                    frame.top + cornerWidth, paint);
+            canvas.drawRect(frame.right - cornerWidth, frame.top, frame.right,
+                    frame.top + cornerHeight, paint);
+            canvas.drawRect(frame.left, frame.bottom - cornerWidth, frame.left
+                    + cornerHeight, frame.bottom, paint);
+            canvas.drawRect(frame.left, frame.bottom - cornerHeight, frame.left
+                    + cornerWidth, frame.bottom, paint);
+            canvas.drawRect(frame.right - cornerHeight, frame.bottom
+                    - cornerWidth, frame.right, frame.bottom, paint);
+            canvas.drawRect(frame.right - cornerWidth, frame.bottom
+                    - cornerHeight, frame.right, frame.bottom, paint);
+
+//            if(slideTop<  (frame.top + POINT_SIZE) || slideTop> (frame.bottom -POINT_SIZE))
+//                slideTop = frame.top + POINT_SIZE;
+//            Rect lineRect = new Rect();
+//            lineRect.left = frame.left;
+//            lineRect.right = frame.right;
+//            lineRect.top = slideTop;
+//            lineRect.bottom = slideTop + POINT_SIZE;// Width of the scan line is 15
+//
+//
+//            canvas.drawBitmap(((BitmapDrawable) (getResources().getDrawable(R.mipmap.ic_scan_line))).getBitmap(),
+//                    null, lineRect, paint);
+//            slideTop += POINT_SIZE;
+
             // If wanted, draw a red "laser scanner" line through the middle to show decoding is active
             if (laserVisibility) {
                 paint.setColor(laserColor);
@@ -209,9 +253,9 @@ public class ViewfinderView extends View {
                 lastPossibleResultPoints = temp;
                 possibleResultPoints.clear();
             }
-
             // Request another update at the animation interval, but only repaint the laser line,
             // not the entire viewfinder mask.
+//            postInvalidateDelayed(ANIMATION_DELAY, 0, 0, width, height);
             postInvalidateDelayed(ANIMATION_DELAY,
                     frame.left - POINT_SIZE,
                     frame.top - POINT_SIZE,
