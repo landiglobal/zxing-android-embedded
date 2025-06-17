@@ -44,7 +44,7 @@ public class ViewfinderView extends View {
     protected static final String TAG = ViewfinderView.class.getSimpleName();
 
     protected static final int[] SCANNER_ALPHA = {0, 64, 128, 192, 255, 192, 128, 64};
-    protected static final long ANIMATION_DELAY = 80L;
+    protected static final long ANIMATION_DELAY = 40L;
     protected static final int CURRENT_POINT_OPACITY = 0xA0;
     protected static final int MAX_RESULT_POINTS = 20;
     protected static final int POINT_SIZE = 6;
@@ -193,66 +193,66 @@ public class ViewfinderView extends View {
             canvas.drawRect(frame.right - cornerWidth, frame.bottom
                     - cornerHeight, frame.right, frame.bottom, paint);
 
-//            if(slideTop<  (frame.top + POINT_SIZE) || slideTop> (frame.bottom -POINT_SIZE))
-//                slideTop = frame.top + POINT_SIZE;
-//            Rect lineRect = new Rect();
-//            lineRect.left = frame.left;
-//            lineRect.right = frame.right;
-//            lineRect.top = slideTop;
-//            lineRect.bottom = slideTop + POINT_SIZE;// Width of the scan line is 15
-//
-//
-//            canvas.drawBitmap(((BitmapDrawable) (getResources().getDrawable(R.mipmap.ic_scan_line))).getBitmap(),
-//                    null, lineRect, paint);
-//            slideTop += POINT_SIZE;
+            if(slideTop<  (frame.top + POINT_SIZE) || slideTop> (frame.bottom -POINT_SIZE))
+                slideTop = frame.top + POINT_SIZE;
+            Rect lineRect = new Rect();
+            lineRect.left = frame.left;
+            lineRect.right = frame.right;
+            lineRect.top = slideTop;
+            lineRect.bottom = slideTop + POINT_SIZE;// Width of the scan line is 15
+
+
+            canvas.drawBitmap(((BitmapDrawable) (getResources().getDrawable(R.mipmap.ic_scan_line))).getBitmap(),
+                    null, lineRect, paint);
+            slideTop += POINT_SIZE;
 
             // If wanted, draw a red "laser scanner" line through the middle to show decoding is active
-            if (laserVisibility) {
-                paint.setColor(laserColor);
+//            if (laserVisibility) {
+//                paint.setColor(laserColor);
+//
+//                paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);
+//                scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;
+//
+//                final int middle = frame.height() / 2 + frame.top;
+//                canvas.drawRect(frame.left + 2, middle - 1, frame.right - 1, middle + 2, paint);
+//            }
 
-                paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);
-                scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;
-
-                final int middle = frame.height() / 2 + frame.top;
-                canvas.drawRect(frame.left + 2, middle - 1, frame.right - 1, middle + 2, paint);
-            }
-
-            final float scaleX = this.getWidth() / (float) previewSize.width;
-            final float scaleY = this.getHeight() / (float) previewSize.height;
+//            final float scaleX = this.getWidth() / (float) previewSize.width;
+//            final float scaleY = this.getHeight() / (float) previewSize.height;
 
             // draw the last possible result points
-            if (!lastPossibleResultPoints.isEmpty()) {
-                paint.setAlpha(CURRENT_POINT_OPACITY / 2);
-                paint.setColor(resultPointColor);
-                float radius = POINT_SIZE / 2.0f;
-                for (final ResultPoint point : lastPossibleResultPoints) {
-                    canvas.drawCircle(
-                             (int) (point.getX() * scaleX),
-                             (int) (point.getY() * scaleY),
-                            radius, paint
-                    );
-                }
-                lastPossibleResultPoints.clear();
-            }
+//            if (!lastPossibleResultPoints.isEmpty()) {
+//                paint.setAlpha(CURRENT_POINT_OPACITY / 2);
+//                paint.setColor(resultPointColor);
+//                float radius = POINT_SIZE / 2.0f;
+//                for (final ResultPoint point : lastPossibleResultPoints) {
+//                    canvas.drawCircle(
+//                             (int) (point.getX() * scaleX),
+//                             (int) (point.getY() * scaleY),
+//                            radius, paint
+//                    );
+//                }
+//                lastPossibleResultPoints.clear();
+//            }
 
             // draw current possible result points
-            if (!possibleResultPoints.isEmpty()) {
-                paint.setAlpha(CURRENT_POINT_OPACITY);
-                paint.setColor(resultPointColor);
-                for (final ResultPoint point : possibleResultPoints) {
-                    canvas.drawCircle(
-                            (int) (point.getX() * scaleX),
-                            (int) (point.getY() * scaleY),
-                            POINT_SIZE, paint
-                    );
-                }
-
-                // swap and clear buffers
-                final List<ResultPoint> temp = possibleResultPoints;
-                possibleResultPoints = lastPossibleResultPoints;
-                lastPossibleResultPoints = temp;
-                possibleResultPoints.clear();
-            }
+//            if (!possibleResultPoints.isEmpty()) {
+//                paint.setAlpha(CURRENT_POINT_OPACITY);
+//                paint.setColor(resultPointColor);
+//                for (final ResultPoint point : possibleResultPoints) {
+//                    canvas.drawCircle(
+//                            (int) (point.getX() * scaleX),
+//                            (int) (point.getY() * scaleY),
+//                            POINT_SIZE, paint
+//                    );
+//                }
+//
+//                // swap and clear buffers
+//                final List<ResultPoint> temp = possibleResultPoints;
+//                possibleResultPoints = lastPossibleResultPoints;
+//                lastPossibleResultPoints = temp;
+//                possibleResultPoints.clear();
+//            }
             // Request another update at the animation interval, but only repaint the laser line,
             // not the entire viewfinder mask.
 //            postInvalidateDelayed(ANIMATION_DELAY, 0, 0, width, height);

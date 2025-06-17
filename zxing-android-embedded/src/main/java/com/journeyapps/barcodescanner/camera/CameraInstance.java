@@ -127,10 +127,17 @@ public class CameraInstance {
         cameraThread.enqueue(configure);
     }
 
-    public void startPreview() {
+    private void startPreviewed(){
+        if(callback != null){
+            mainHandler.postDelayed(callback,0);
+        }
+    }
+
+    private Runnable callback;
+    public void startPreview(Runnable callback) {
         Util.validateMainThread();
         validateOpen();
-
+        this.callback = callback;
         cameraThread.enqueue(previewStarter);
     }
 
@@ -181,7 +188,6 @@ public class CameraInstance {
                 Log.d(TAG, "Camera is closed, not requesting preview");
                 return;
             }
-
             cameraThread.enqueue(() -> cameraManager.requestPreviewFrame(callback));
         });
     }
@@ -225,9 +231,10 @@ public class CameraInstance {
         @Override
         public void run() {
             try {
-                Log.d(TAG, "Starting preview");
+                Log.d(TAG, "start preview");
                 cameraManager.setPreviewDisplay(surface);
                 cameraManager.startPreview();
+                startPreviewed();
             } catch (Exception e) {
                 notifyError(e);
                 Log.e(TAG, "Failed to start preview", e);

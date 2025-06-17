@@ -781,11 +781,11 @@ public class CameraPreview extends ViewGroup {
         if (!previewActive && cameraInstance != null) {
             Log.i(TAG, "Starting preview");
             cameraInstance.setSurface(surface);
-            cameraInstance.startPreview();
-            previewActive = true;
-
-            previewStarted();
-            fireState.previewStarted();
+            cameraInstance.startPreview(()->{
+                previewActive = true;
+                previewStarted();
+                fireState.previewStarted();
+            });
         }
     }
 

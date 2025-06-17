@@ -55,7 +55,7 @@ public final class CameraManager {
     private Camera.CameraInfo cameraInfo;
 
     private AutoFocusManager autoFocusManager;
-    private AmbientLightManager ambientLightManager;
+//    private AmbientLightManager ambientLightManager;
 
     private boolean previewing;
     private String defaultParameters;
@@ -184,8 +184,8 @@ public final class CameraManager {
             theCamera.startPreview();
             previewing = true;
             autoFocusManager = new AutoFocusManager(camera, settings);
-            ambientLightManager = new AmbientLightManager(context, this, settings);
-            ambientLightManager.start();
+//            ambientLightManager = new AmbientLightManager(context, this, settings);
+//            ambientLightManager.start();
         }
     }
 
@@ -199,10 +199,10 @@ public final class CameraManager {
             autoFocusManager.stop();
             autoFocusManager = null;
         }
-        if (ambientLightManager != null) {
-            ambientLightManager.stop();
-            ambientLightManager = null;
-        }
+//        if (ambientLightManager != null) {
+//            ambientLightManager.stop();
+//            ambientLightManager = null;
+//        }
         if (camera != null && previewing) {
             camera.stopPreview();
             cameraPreviewCallback.setCallback(null);
@@ -292,7 +292,6 @@ public final class CameraManager {
             requestedPreviewSize = null;
         } else {
             requestedPreviewSize = displayConfiguration.getBestPreviewSize(previewSizes, isCameraRotated());
-
             parameters.setPreviewSize(requestedPreviewSize.width, requestedPreviewSize.height);
         }
 
@@ -301,7 +300,6 @@ public final class CameraManager {
             // FIXME - can/should we do this for other devices as well?
             CameraConfigurationUtils.setBestPreviewFPS(parameters);
         }
-
         Log.i(TAG, "Final camera parameters: " + parameters.flatten());
 
         camera.setParameters(parameters);
@@ -313,7 +311,6 @@ public final class CameraManager {
         if (rawSupportedSizes == null) {
             Camera.Size defaultSize = parameters.getPreviewSize();
             if (defaultSize != null) {
-                Size previewSize = new Size(defaultSize.width, defaultSize.height);
                 previewSizes.add(new Size(defaultSize.width, defaultSize.height));
             }
             return previewSizes;

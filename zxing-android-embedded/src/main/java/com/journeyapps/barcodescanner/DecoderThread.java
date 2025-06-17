@@ -1,6 +1,7 @@
 package com.journeyapps.barcodescanner;
 
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -15,6 +16,7 @@ import com.journeyapps.barcodescanner.camera.CameraInstance;
 import com.journeyapps.barcodescanner.camera.PreviewCallback;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -80,8 +82,12 @@ public class DecoderThread {
         thread.start();
         handler = new Handler(thread.getLooper(), callback);
         running = true;
-        new Handler().postDelayed(()->  {requestNextPreview();} , 600);
-//        requestNextPreview();
+        if(Objects.equals("P20", Build.MODEL)){
+            resultHandler.postDelayed(this::requestNextPreview, 150);
+        } else {
+            requestNextPreview();
+        }
+
     }
 
     /**
