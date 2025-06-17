@@ -21,6 +21,7 @@ import android.content.Intent;
 import com.google.zxing.BarcodeFormat;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,6 +69,14 @@ public final class DecodeFormatManager {
     }
 
     private DecodeFormatManager() {
+    }
+
+    public static Collection<BarcodeFormat> getQrCodeFormats() {
+        return QR_CODE_FORMATS;
+    }
+
+    public static Collection<BarcodeFormat> getBarCodeFormats() {
+        return ONE_D_FORMATS;
     }
 
     public static Set<BarcodeFormat> parseDecodeFormats(Intent intent) {

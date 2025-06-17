@@ -165,7 +165,7 @@ public class BarcodeView extends CameraPreview {
     }
 
     protected DecoderFactory createDefaultDecoderFactory() {
-        return new DefaultDecoderFactory();
+        return new AllDecoderFactory();
     }
 
     private void startDecoderThread() {
